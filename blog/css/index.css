@@ -1,0 +1,29 @@
+/* card container */
+.blog-container>div.card{
+    margin: 20px;
+}
+
+.my-avatar-container {
+    margin: auto;
+}
+
+.card-text span {
+    margin-right: 20px;
+}
+
+.card-text span i {
+    margin-right: 5px;
+}
+
+@media screen and (max-width: 576px) {
+    .card-text span {
+        display: block;
+    }
+}
+
+.blog-content {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}

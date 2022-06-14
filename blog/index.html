@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My blog</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#" style="padding: 0;"><img src="img/logo.png" alt="" height="44px"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="portfolio.html">Portfolio</a>
+                    </li>
+                </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="body">
+        <div class="container col-xxl-8 px-4 py-5">
+            <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+            <div class="col-10 col-sm-8 col-lg-6 my-avatar-container">
+                <img src="img/avatar.jpg" class="d-block mx-lg-auto img-fluid" alt="my avatar" width="700" height="500" loading="lazy">
+            </div>
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold lh-1 mb-3">Welcome To My Blog!</h1>
+                <p class="lead">My name is Qiu Jingxi, I am a student from Wenzhou Kean University. <br>This is my blog project for TECH3500 web programming.</p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a href="about.html" class="btn btn-primary btn-lg px-4 me-md-2">About me</a>
+                <a href="contact.html" class="btn btn-outline-secondary btn-lg px-4">Contact me</a>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="blog-container">
+        </div>
+        
+    </div>
+    
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <p class="col-md-4 mb-0 text-muted">© 2022 Jingxi Qiu</p>
+        
+            <ul class="nav col-md-4 justify-content-end">
+            <li class="nav-item"><a href="index.html" class="nav-link px-2 text-muted">Home</a></li>
+            <li class="nav-item"><a href="about.html" class="nav-link px-2 text-muted">About</a></li>
+            <li class="nav-item"><a href="contact.html" class="nav-link px-2 text-muted">Contact</a></li>
+            <li class="nav-item"><a href="portfolio.html" class="nav-link px-2 text-muted">Portfolio</a></li>
+            </ul>
+        </footer>
+    </div>
+    
+    <script type="text/javascript" src="js/time_format.js"></script>
+
+    <script type="text/javascript">
+
+        function formatBlogCard(data) {
+            return `<div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="${data.img}" class="img-fluid rounded-start" style="width: 100%;">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">${data.title}</h5>
+                                    <p class="card-text">
+                                        <span><i class="bi bi-clock"></i>${formatTime(data.created_time, "Y-M-D h:m:s")}</span>
+                                        <span><i class="bi bi-person-circle"></i>${data.author.username}</span>
+                                        <span><i class="bi bi-columns-gap"></i>${data.blog_type.type_name}</span>
+                                    </p>
+                                    <p class="card-text blog-content">${data.content}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+        }
+
+        var next = null;
+
+        $(document).ready(function(){
+            $.ajax({
+                url:"http://103.145.60.31:12800/api/blog/blog/",
+                type: 'GET',
+                dataType: 'json',
+                cache:false,
+                success: function(data){
+                    console.log(data);
+                    next = data.next;
+                    for (var i=0; i<data.results.length; i++) {
+                        var content = formatBlogCard(data.results[i]);
+                        $(".blog-container").append(content);
+                    }
+                    $(window).on("resize scroll", function(){
+                        var windowHeight = $(window).height();          
+                        var scrollTop = $(window).scrollTop();           
+                        var docHeight = $(document).height();
+                        if (scrollTop + windowHeight >= docHeight) { 
+                            if (next) {
+                                $.ajax({
+                                    url:next,
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    cache:false,
+                                    success: function(data){
+                                        console.log(data);
+                                        next = data.next;
+                                        for (var i=0; i<data.results.length; i++) {
+                                            var content = formatBlogCard(data.results[i]);
+                                            $(".blog-container").append(content);
+                                        }
+                                    },
+                                    error: function(xhr){
+                                        console.log(xhr);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                },
+                error: function(xhr){
+                    console.log(xhr);
+                }
+            });
+        });
+    </script>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

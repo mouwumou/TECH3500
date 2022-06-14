@@ -1,0 +1,22 @@
+a[href$=".pdf"]:before {
+    width:32px;
+    height:32px;
+    background:url('http://wwwimages.adobe.com/content/dam/acom/en/legal/images/badges/Adobe_PDF_file_icon_32x32.png');
+    display:inline-block;
+    content:' ';
+}
+
+/* Add " (PDF)" text after links that go to PDFs */
+a[href$=".pdf"]:after { content: " (PDF)"; }
+
+/* If file size specified as data attribute, use that too */
+a[href$=".pdf"][data-size]:after { content: " (PDF, " attr(data-size) ")"; }
+
+.portfolio-container {
+    margin: 0 20px;
+}
+
+#resume-iframe {
+    width: 100%;
+    height: 60vh;
+}
