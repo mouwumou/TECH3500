@@ -7,6 +7,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/contact.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
     <header>
@@ -43,21 +44,21 @@
                 <div class="col-lg-6 col-md-12 mb-5">
                     <div class="form-container">
                         <h3>Contact Me</h3>
-                        <form action="">
+                        <form id="contact-form">
                             <div class="mb-3">
                                 <label for="name-input" class="form-label">Your name</label>
-                                <input type="text" class="form-control" id="name-input" placeholder="">
+                                <input type="text" class="form-control" id="name-input" placeholder="" name="name" required>
                             </div>
                             <div class="mb-3">
                                 <label for="email-input" class="form-label">Email address</label>
-                                <input type="email" class="form-control" id="email-input" placeholder="name@example.com">
+                                <input type="email" class="form-control" id="email-input" placeholder="name@example.com" name="email" required>
                             </div>
                             <div class="mb-4">
                                 <label for="content-input" class="form-label">Content</label>
-                                <textarea class="form-control" id="content-input" rows="3"></textarea>
+                                <textarea class="form-control" id="content-input" rows="3" name="content" required></textarea>
                             </div>
                             <div class="mb-3">
-                                <button type="button" class="btn btn-outline-primary btn-lg">Send</button>
+                                <button type="button" class="btn btn-outline-primary btn-lg" onclick="contactFormSubmit()">Send</button>
                             </div>
                         </form>
                     </div>
@@ -94,5 +95,25 @@
     
 
     <script src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        function contactFormSubmit() {
+            let json = $('#contact-form').serialize();
+            console.log('json: ', json);
+            $.ajax({
+                url:"contactme.php",
+                type: 'POST',
+                data: json,
+                cache:false,
+                success: function(data){
+                    console.log(data);
+                    alert("Sent successfully!")
+                },
+                error: function(xhr){
+                    console.log(xhr);
+                    alert("Please check your inputs, especially email!")
+                }
+            });
+        }
+    </script>
   </body>
 </html>
